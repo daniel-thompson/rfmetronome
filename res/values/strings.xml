@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">RFMetronome</string>
+    
+    <!-- MainActivity labels -->
+    <string name="bpm">bpm</string>
+    <string name="display_bpm">120</string>
+    <string name="tempo">Tempo:</string>
+    <string name="display_tempo">Andante</string>
+    <string-array name="tempo_array">
+        <!-- this is what wikipedia says on the subject -->
+        <!-- http://en.wikipedia.org/wiki/Tempo#Basic_tempo_markings
+             Larghissimo — very, very slow (20 bpm and below)
+             Grave — slow and solemn (20–40 bpm)
+             Lento — slowly (40–60 bpm)
+             Largo — broadly (40–60 bpm)
+             Larghetto — rather broadly (60–66 bpm)
+             Adagio — slow and stately (literally, "at ease") (66–76 bpm)
+             Adagietto — rather slow (70–80 bpm)
+             Andante Moderato — a bit slower than andante
+             Andante — at a walking pace (76–108 bpm)
+             Andantino – slightly faster than andante
+             Moderato — moderately (108–120 bpm)
+             Allegretto — moderately fast (but less so than allegro)
+             Allegro moderato — moderately quick (112–124 bpm)
+             Allegro — fast, quickly and bright (120–168 bpm)
+             Vivace — lively and fast (≈140 bpm) (quicker than allegro)
+             Vivacissimo — very fast and lively
+             Allegrissimo — very fast
+             Presto — very fast (168–200 bpm)
+             Prestissimo — extremely fast (more than 200bpm)
+          -->
+         <item>Larghissimo</item>  <!-- 12-20 -->
+         <item>Grave</item>        <!-- 20-40 -->
+         <item>Largo</item>        <!-- 40-60 -->
+         <item>Adagio</item>       <!-- 60-80 -->
+         <item>Andante</item>      <!-- 80-100 -->
+         <item>Moderato</item>     <!-- 100-120 -->
+         <item>Allegro</item>      <!-- 120-140 -->
+         <item>Allegrissimo</item> <!-- 140-160 -->
+         <item>Presto</item>       <!-- 160-180 -->
+         <item>Presto</item>       <!-- 180-200 -->
+         <item>Prestissimo</item>  <!-- >200 -->
+    </string-array>
+    
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="accent">Accent pattern:</string>
+    <string-array name="accent_array">
+        <item>No accent</item>
+        <item>4/4</item>
+        <item>2/4</item>
+        <item>3/4</item>
+        <item>6/8</item>
+    </string-array>
+</resources>

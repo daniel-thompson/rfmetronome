@@ -1,0 +1,100 @@
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dip" />
+
+        <SeekBar
+            android:id="@+id/seekBarTempo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="10dip" android:isScrollContainer="true" android:max="218"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBarTempo"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="50dip"
+                android:layout_height="wrap_content"
+                android:text="@string/minus" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="50dip"
+                android:layout_height="wrap_content"
+                android:text="@string/plus" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBarTempo"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dip"
+            android:text="@string/tempo"
+            android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textViewTempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBarTempo"
+            android:layout_marginLeft="5dip"
+            android:layout_toRightOf="@+id/textView3"
+            android:text="@string/display_tempo"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton1"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dip"
+            android:text="" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toggleButton1"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textViewBpm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/display_bpm"
+                android:textAppearance="?android:attr/textAppearanceLarge" android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dip"
+                android:text="@string/bpm"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
