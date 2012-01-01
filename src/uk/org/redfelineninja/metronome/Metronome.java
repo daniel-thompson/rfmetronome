@@ -9,7 +9,7 @@ import android.media.AudioTrack;
 public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 	private AudioTrack mAudioTrack;
 
-	private int delayBufferSize = 44100;
+	private int delayBufferSize = 1024;
 	private short[] delayBuffer;
 	private int delayPointer;
 	private int delayInFrames = 64;
@@ -27,10 +27,10 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 	private long frameAlarm;
 	private int sampleRateInHz = 44100;
 	
-	private int beatCounter = 1;
-	private int beatsPerBar = 4;
-	private int beatsPerMinute;
-	private int framesPerBeat;
+	private int mBeatCounter = 1;
+	private int mBeatsPerBar = 4;
+	private int mBeatsPerMinute;
+	private int mFramesPerBeat;
 	
 	public Metronome() {
 		delayBuffer = new short[delayBufferSize];
@@ -48,27 +48,26 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 	}
 	
 	public int getBeatsPerMinute() {
-		return beatsPerMinute;
+		return mBeatsPerMinute;
 	}
 
 	public void setBeatsPerMinute(int beatsPerMinute) {
-		this.beatsPerMinute = beatsPerMinute;
+		this.mBeatsPerMinute = beatsPerMinute;
 		
-		framesPerBeat = (int) (sampleRateInHz / ((double) beatsPerMinute / 60.0));
+		mFramesPerBeat = (int) (sampleRateInHz / ((double) beatsPerMinute / 60.0));
 	}
 
     public void start() {
 		if (null != mAudioTrack)
 			return;
 		
-		int sampleRateInHz = 44100;
 		int channelConfig = AudioFormat.CHANNEL_OUT_MONO;
 		int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
 		int minBufferSize = AudioTrack.getMinBufferSize (
 				sampleRateInHz, channelConfig, audioFormat);
 		assert 0 != minBufferSize; // TODO
-		int bufferSize = 1 * sampleRateInHz * 2; // two seconds
+		int bufferSize = 3 * sampleRateInHz * 2; // three seconds
 		if (bufferSize < minBufferSize)
 			bufferSize = minBufferSize;
 		
@@ -76,10 +75,9 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 				AudioManager.STREAM_MUSIC,
 				sampleRateInHz, channelConfig, audioFormat,
 				bufferSize, AudioTrack.MODE_STREAM);
-		mAudioTrack.setPositionNotificationPeriod(bufferSize / (2 * 4));
+		mAudioTrack.setPositionNotificationPeriod((2 * bufferSize) / (3 * 2)); // two seconds
 		mAudioTrack.setPlaybackPositionUpdateListener(this);
-		for (int i=0; i<4; i++)
-			issuePeriod();
+		issueSamples(bufferSize / 2);
 		mAudioTrack.play();
     }
     
@@ -102,7 +100,8 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 	public void onPeriodicNotification(AudioTrack arg0) {
 		assert arg0 == mAudioTrack;
 		
-		issuePeriod();
+		int numSamples = mAudioTrack.getPositionNotificationPeriod();
+		issueSamples(numSamples);
 	}
 
 	
@@ -152,44 +151,50 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		return (short) sample;
 	}
 	
-	private void issuePeriod() {
-		int numSamples = mAudioTrack.getPositionNotificationPeriod();
-		
-		// karplus-strong synth storing new samples in its own delay buffer
-		int pointer = delayPointer;
-		for (int i=0; i<numSamples; i++) {
-			delayBuffer[pointer] = (short) (excite() + filter(pointer));
-		
-			if(++pointer >= delayBufferSize) {
-				pointer = 0;
+	private void issueSamples(int numSamples) {
+		while (numSamples > 0) {
+			int numSamplesThisIteration = delayBuffer.length;
+			if (numSamplesThisIteration > numSamples)
+				numSamplesThisIteration = numSamples;
+			
+			// karplus-strong synth storing new samples in its own delay buffer
+			int pointer = delayPointer;
+			for (int i=0; i<numSamplesThisIteration; i++) {
+				delayBuffer[pointer] = (short) (excite() + filter(pointer));
+			
+				if(++pointer >= delayBufferSize) {
+					pointer = 0;
+				}
+				
+				if (frameAlarm < frameCounter++) {
+					// arm the frame alarm
+					frameAlarm += mFramesPerBeat;
+					
+					// send in a new excitement pulse
+					if (mBeatCounter == 1 && mBeatsPerBar > 0) {
+						exciteBuffer = greaterClickBuffer;
+					} else {
+						exciteBuffer = lesserClickBuffer;
+					}
+					excitePointer = 0;
+					
+					mBeatCounter++;
+					if (mBeatCounter > mBeatsPerBar) {
+						mBeatCounter = 1;
+					}
+				}
 			}
 			
-			if (frameAlarm < frameCounter++) {
-				// arm the frame alarm
-				frameAlarm += framesPerBeat;
-				
-				// send in a new excitement pulse
-				if (beatCounter == 1) {
-					exciteBuffer = greaterClickBuffer;
-				} else {
-					exciteBuffer = lesserClickBuffer;
-				}
-				excitePointer = 0;
-				
-				beatCounter++;
-				if (beatCounter > beatsPerBar) {
-					beatCounter = 1;
-				}
+			if ((delayPointer + numSamplesThisIteration) <= delayBufferSize) {
+				mAudioTrack.write(delayBuffer, delayPointer, numSamplesThisIteration);
+			} else {
+				mAudioTrack.write(delayBuffer, delayPointer, delayBufferSize - delayPointer);
+				mAudioTrack.write(delayBuffer, 0, numSamplesThisIteration - (delayBufferSize - delayPointer));
 			}
+			
+			delayPointer = pointer;
+			
+			numSamples -= numSamplesThisIteration;
 		}
-		
-		if ((delayPointer + numSamples) <= delayBufferSize) {
-			mAudioTrack.write(delayBuffer, delayPointer, numSamples);
-		} else {
-			mAudioTrack.write(delayBuffer, delayPointer, delayBufferSize - delayPointer);
-			mAudioTrack.write(delayBuffer, 0, numSamples - (delayBufferSize - delayPointer));
-		}
-		
-		delayPointer = pointer;
 	}
 }
