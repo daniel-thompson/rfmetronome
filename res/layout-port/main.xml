@@ -10,7 +10,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dip" />
 
         <TextView
             android:id="@+id/textView1"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp" android:max="218"/>
+            android:layout_margin="10dip" android:max="218"/>
 
         <LinearLayout
             android:id="@+id/linearLayout1"
@@ -40,13 +40,13 @@
 
             <Button
                 android:id="@+id/button1"
-                android:layout_width="50dp"
+                android:layout_width="50dip"
                 android:layout_height="wrap_content"
                 android:text="@string/minus" />
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="50dp"
+                android:layout_width="50dip"
                 android:layout_height="wrap_content"
                 android:text="@string/plus" />
         </LinearLayout>
@@ -57,17 +57,17 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/seekBarTempo"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="5dip"
             android:text="@string/tempo"
             android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="bold"/>
 
         <ToggleButton
             android:id="@+id/toggleButton1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dip"
             android:text="" />
 
         <LinearLayout
@@ -100,9 +100,9 @@
             android:id="@+id/textViewTempo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView3"
-            android:layout_alignBottom="@+id/textView3"
-            android:layout_alignRight="@+id/seekBarTempo"
+            android:layout_above="@+id/seekBarTempo"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dip"
             android:text="@string/display_tempo"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

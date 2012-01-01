@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
@@ -53,16 +54,6 @@
             android:text="@string/tempo"
             android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/textViewTempo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/seekBarTempo"
-            android:layout_marginLeft="5dip"
-            android:layout_toRightOf="@+id/textView3"
-            android:text="@string/display_tempo"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <ToggleButton
             android:id="@+id/toggleButton1"
             android:layout_width="70dip"
@@ -84,10 +75,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/display_bpm"
-                android:textAppearance="?android:attr/textAppearanceLarge" android:textStyle="bold"/>
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dip"
@@ -97,4 +89,14 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/textViewTempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBarTempo"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dip"
+            android:text="@string/display_tempo"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </RelativeLayout>
