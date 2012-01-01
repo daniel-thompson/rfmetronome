@@ -1,0 +1,4 @@
+drawable-ldpi:  36x36 (increase stroke width to 10px before exporting)
+drawable-mdpi:  48x48
+drawable-hdpi:  72x72
+drawable-xhdpi: 96x96
