@@ -3,6 +3,7 @@ package uk.org.redfelineninja.metronome;
 //import uk.org.redfelineninja.metronome.R;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -23,9 +24,11 @@ public class MainActivity extends Activity {
 	private int mBpm = 100;
 	private int mAccent = 0;
 	
+	private ToggleButton mCachedToggleButton;
 	private TextView mCachedTextViewBpm;
 	private TextView mCachedTextViewTempo;
 	private SeekBar mCachedSeekBarTempo;
+	private Spinner mCachedSpinnerAccent;
 	
 	private Metronome mMetronome;
 	
@@ -40,8 +43,7 @@ public class MainActivity extends Activity {
 	private SeekBar.OnSeekBarChangeListener mSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
-			// do nothing
-			
+			mMetronome.flush();
 		}
 		
 		@Override
@@ -70,12 +72,8 @@ public class MainActivity extends Activity {
 	private OnItemSelectedListener mAccentListener = new OnItemSelectedListener() {
 		@Override
 	    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-			mAccent = pos;
-			
-			//Toast.makeText(parent.getContext(),
-			//		"Accent pattern is " + parent.getItemAtPosition(pos).toString(),
-			//		Toast.LENGTH_LONG).show();
-	    }
+			setAccent(pos);
+		}
 
 		@Override
 	    public void onNothingSelected(AdapterView<?> parent) {
@@ -89,8 +87,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.toggleButton1);
-        toggle.setOnCheckedChangeListener(mEnableListener);
+        mCachedToggleButton = (ToggleButton) findViewById(R.id.toggleButton1);
+        mCachedToggleButton.setOnCheckedChangeListener(mEnableListener);
         
         mCachedTextViewBpm = (TextView) findViewById(R.id.textViewBpm);
         mCachedTextViewTempo = (TextView) findViewById(R.id.textViewTempo);
@@ -106,24 +104,30 @@ public class MainActivity extends Activity {
         plusButton.setTag(R.id.button_tag, new Integer(1));
         plusButton.setOnClickListener(mPlusMinusListener);
         
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+        mCachedSpinnerAccent = (Spinner) findViewById(R.id.spinner1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.accent_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(mAccentListener);
+        mCachedSpinnerAccent.setAdapter(adapter);
+        mCachedSpinnerAccent.setOnItemSelectedListener(mAccentListener);
         
         mMetronome = new Metronome();
+        
+        // Restore preferences
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        mBpm = settings.getInt("beatsPerMinute", mBpm);
+        mAccent = settings.getInt("accentPattern", mAccent);
+       
+        // Apply preferences
         setBpm(mBpm);
+        setAccent(mAccent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         // The activity is visible (but make not have focus)
-        
-        if (mEnabled)
-        	mMetronome.stop();
+        // Do nothing.
     }
 
     @Override
@@ -145,7 +149,17 @@ public class MainActivity extends Activity {
         super.onStop();
         // The activity is no longer visible (it is now "stopped")
         
+        // Halt the clicking (and update the UI)
         mMetronome.stop();
+        mCachedToggleButton.setChecked(false);
+        mEnabled = false;
+        
+        // Store preferences
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("beatsPerMinute", mBpm);
+        editor.putInt("accentPattern", mAccent);
+        editor.commit();
     }
 
     @Override
@@ -181,6 +195,33 @@ public class MainActivity extends Activity {
     	mMetronome.setBeatsPerMinute(bpm);
     	
     	mBpm = bpm;
+    }
+    
+    public int getAccent() {
+    	return getAccent();
+    }
+    
+    public void setAccent(int accent) {
+		int beatsPerBar = 0;
+		
+		// see accent_array
+		switch (accent) {
+		case 0: beatsPerBar = 0; break; // no accent
+		case 1: beatsPerBar = 4; break; // 4/4
+		case 2: beatsPerBar = 2; break; // 2/4
+		case 3: beatsPerBar = 3; break; // 3/4
+		case 4: beatsPerBar = 3; break; // 6/8 (double bpm?)
+		default: assert false;
+		}
+		
+		int uiAccent = mCachedSpinnerAccent.getSelectedItemPosition();
+		if (uiAccent != accent)
+			mCachedSpinnerAccent.setSelection(accent);
+		
+		mMetronome.setBeatsPerBar(beatsPerBar);
+		mMetronome.flush();
+		
+		mAccent = accent;
     }
     
     public boolean getEnabled() {

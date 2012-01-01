@@ -57,6 +57,15 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		mFramesPerBeat = (int) (sampleRateInHz / ((double) beatsPerMinute / 60.0));
 	}
 
+	public int getBeatsPerBar() {
+		return mBeatsPerBar;
+	}
+	
+	public void setBeatsPerBar(int beatsPerBar) {
+		mBeatsPerBar = beatsPerBar;
+		mBeatCounter = 1;
+	}
+	
     public void start() {
 		if (null != mAudioTrack)
 			return;
@@ -90,6 +99,19 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		mAudioTrack = null;
     }
 
+    public void flush() {
+    	if (null == mAudioTrack)
+    		return;
+    	
+    	stop();
+    	start();
+    	//mAudioTrack.pause();
+    	//mAudioTrack.flush();
+    	//for (int i=0; i<4; i++)
+		//	issuePeriod();
+    	//mAudioTrack.play();
+    }
+    	
 	@Override
 	public void onMarkerReached(AudioTrack arg0) {
 		assert false; // not reached
