@@ -14,5 +14,29 @@
             </intent-filter>
         </activity>
 
+        <!-- OI About metadata -->
+	<meta-data android:name="org.openintents.metadata.COMMENTS"
+                       android:value="@string/about_comments" />
+        <meta-data android:name="org.openintents.metadata.COPYRIGHT"
+                       android:value="@string/about_copyright" />
+        <meta-data android:name="org.openintents.metadata.AUTHORS"
+                       android:resource="@array/about_authors" />
+        <!-- <meta-data android:name="org.openintents.metadata.DOCUMENTERS"
+                       android:resource="@array/about_documenters" /> -->
+        <!-- <meta-data android:name="org.openintents.metadata.TRANSLATORS"
+                       android:resource="@string/about_translators" /> -->
+        <!--  <meta-data android:name="org.openintents.metadata.ARTISTS"
+                       android:resource="@array/about_artists" /> -->
+        <meta-data android:name="org.openintents.metadata.WEBSITE_LABEL"
+                       android:value="@string/about_website_url" />
+        <meta-data android:name="org.openintents.metadata.WEBSITE_URL"
+                       android:value="@string/about_website_url" />
+        <meta-data android:name="org.openintents.metadata.LICENSE"
+                       android:resource="@raw/license_short" />
+        <!--  <meta-data android:name="org.openintents.metadata.EMAIL"
+                       android:value="@string/about_email" /> -->
+        <!-- <meta-data android:name="org.openintents.metadata.RECENT_CHANGES"
+                       android:resource="@raw/recent_changes" /> -->
+
     </application>
 </manifest>

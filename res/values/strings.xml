@@ -42,7 +42,6 @@
          <item>Presto</item>       <!-- 180-200 -->
          <item>Prestissimo</item>  <!-- >200 -->
     </string-array>
-    
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="accent">Accent pattern:</string>
@@ -53,4 +52,7 @@
         <item>3/4</item>
         <item>6/8</item>
     </string-array>
+    
+    <!--  MainActivity menu items -->
+    <string name="about">About</string>
 </resources>

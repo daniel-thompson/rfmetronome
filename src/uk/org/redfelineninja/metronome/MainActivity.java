@@ -2,10 +2,18 @@ package uk.org.redfelineninja.metronome;
 
 //import uk.org.redfelineninja.metronome.R;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -170,6 +179,38 @@ public class MainActivity extends Activity {
         //              already
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.main_item_about:
+        	
+        	Intent intent = new Intent("org.openintents.action.SHOW_ABOUT_DIALOG");
+        	
+        	// See http://android-developers.blogspot.com/2009/01/can-i-use-this-intent.html
+    	    final PackageManager packageManager = this.getPackageManager();
+    	    List<ResolveInfo> list =
+    	            packageManager.queryIntentActivities(intent,
+    	                    PackageManager.MATCH_DEFAULT_ONLY);
+    	    boolean intentAvailable = list.size() > 0;
+    	    
+    		if (intentAvailable) {
+    			startActivityForResult(intent, 0);
+    		} else {
+    			Toast.makeText(this, "OI About is not installed", Toast.LENGTH_SHORT).show();
+    		}
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
     public int getBpm() {
     	return mBpm;
     }
