@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,6 +95,11 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // this is a neat trick to get the volume buttons controlling
+        // the metronome volume even when the metronome is stopped
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        
         setContentView(R.layout.main);
         
         mCachedToggleButton = (ToggleButton) findViewById(R.id.toggleButton1);
