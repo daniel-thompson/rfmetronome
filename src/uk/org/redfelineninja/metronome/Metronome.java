@@ -41,7 +41,7 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		Random random = new Random();
 		for (int i=0; i<exciteBufferSize; i++) {
 			lesserClickBuffer[i] = getSawtooth(i, exciteBufferSize/2);
-			greaterClickBuffer[i] = (short) (lesserClickBuffer[i] + (random.nextInt() >> 19));
+			greaterClickBuffer[i] = (short) (lesserClickBuffer[i] + (random.nextInt() >> 20));
 		}
 		
 		setBeatsPerMinute(120);
@@ -79,11 +79,14 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		int bufferSize = 3 * sampleRateInHz * 2; // three seconds
 		if (bufferSize < minBufferSize)
 			bufferSize = minBufferSize;
+
+		float maxVolume = AudioTrack.getMaxVolume();
 		
 		mAudioTrack = new AudioTrack(
 				AudioManager.STREAM_MUSIC,
 				sampleRateInHz, channelConfig, audioFormat,
 				bufferSize, AudioTrack.MODE_STREAM);
+		mAudioTrack.setStereoVolume(maxVolume, maxVolume);
 		mAudioTrack.setPositionNotificationPeriod((2 * bufferSize) / (3 * 2)); // two seconds
 		mAudioTrack.setPlaybackPositionUpdateListener(this);
 		issueSamples(bufferSize / 2);
@@ -144,7 +147,7 @@ public class Metronome implements AudioTrack.OnPlaybackPositionUpdateListener {
 		if (step > quarter)
 			step = half - step;
 		
-		return (short) (sign * (((0x3fff0000 / quarter) * step) >> 16));
+		return (short) (sign * (((0x78ff0000 / quarter) * step) >> 16));
 	}
 	
 	private short getHistoricSample(int pointer, int offset) {
