@@ -55,4 +55,5 @@
     
     <!--  MainActivity menu items -->
     <string name="about">About</string>
+    <string name="tap_tempo">Tap</string>
 </resources>

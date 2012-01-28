@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,7 +79,25 @@ public class MainActivity extends Activity {
 		}
     };
 
-	
+	private View.OnClickListener mTapTempoListener = new View.OnClickListener() {
+		long lastTap = 0;
+
+		@Override
+        public void onClick(View v) {
+			final int MINUTE_MILLIS = 60000;
+
+			long thisTap = SystemClock.uptimeMillis();
+			long tapDuration = thisTap - lastTap; // milliseconds
+			int bpm = (int) (MINUTE_MILLIS / tapDuration);
+
+			// bpm might be nonsense but setBpm() ignores out-of-range values
+			setBpm(bpm);
+			mMetronome.flush();
+
+			lastTap = thisTap;
+		}
+    };
+
 	private OnItemSelectedListener mAccentListener = new OnItemSelectedListener() {
 		@Override
 	    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -111,13 +130,16 @@ public class MainActivity extends Activity {
         mCachedSeekBarTempo = (SeekBar) findViewById(R.id.seekBarTempo);
         mCachedSeekBarTempo.setOnSeekBarChangeListener(mSeekBarListener);
         
-        Button minusButton = (Button) findViewById(R.id.button1);
-        minusButton.setTag(R.id.button_tag, new Integer(-1));
-        minusButton.setOnClickListener(mPlusMinusListener);
+        Button buttonMinus = (Button) findViewById(R.id.buttonMinus);
+        buttonMinus.setTag(R.id.button_tag, new Integer(-1));
+        buttonMinus.setOnClickListener(mPlusMinusListener);
+    
+        Button buttonTapTempo = (Button) findViewById(R.id.buttonTapTempo);
+        buttonTapTempo.setOnClickListener(mTapTempoListener);
         
-        Button plusButton = (Button) findViewById(R.id.button2);
-        plusButton.setTag(R.id.button_tag, new Integer(1));
-        plusButton.setOnClickListener(mPlusMinusListener);
+        Button buttonPlus = (Button) findViewById(R.id.buttonPlus);
+        buttonPlus.setTag(R.id.button_tag, new Integer(1));
+        buttonPlus.setOnClickListener(mPlusMinusListener);
         
         mCachedSpinnerAccent = (Spinner) findViewById(R.id.spinner1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -223,11 +245,11 @@ public class MainActivity extends Activity {
     
     public void setBpm(int bpm) {
     	if (bpm < MIN_TEMPO)
-    		bpm = MIN_TEMPO;
+    		return;
     	
     	int max_tempo = MIN_TEMPO + mCachedSeekBarTempo.getMax();
     	if (bpm > max_tempo)
-    		bpm = max_tempo;
+    		return;
 
     	mCachedTextViewBpm.setText(Integer.toString(bpm));
     	mCachedSeekBarTempo.setProgress(bpm - MIN_TEMPO);
