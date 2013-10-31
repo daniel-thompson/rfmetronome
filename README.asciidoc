@@ -1,0 +1,20 @@
+Red Feline Metronome
+====================
+
+image:art/icon.svg[A red cat with a metronome for a tail]
+
+Red Feline Metronome is a simple metronome program for Android.  This
+program is free software licensed under the GNU General Public License
+(version 3 or later).
+
+This was written mostly to get familar with the Android APIs tools. As
+such the only thing that distinguishes this program from the many, many
+similar programs available for Android is the use of a simple
+synthesizer to generate its clicks (rather than using pre-rendered
+samples). It generates a continous audio streams in order to offer a
+steady tick rate.
+
+This program cannot currently be found on Google Play. The primary
+reason for this is that there is no visual click indicator and
+therefore, whilst the program is functional, I nevertheless regard it
+as unfinished.
